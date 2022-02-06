@@ -6,34 +6,36 @@
     flex: 1;
 
     .header-container {
-        color: white;
         display: flex;
         justify-content: center;
         min-height: 100px;
         flex: 1;
     }
 
-    .content-container {
-        color: brown;
+    .board-container {
         display: flex;
         justify-content: center;
         padding: 50px 0 50px 0;
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            grid-gap: 5px;
-        }
+        .board {
+            display: flex;
+            flex-direction: column;
 
-        .grid-container div {
-            background-color: red;
-            min-width: 50px;
-            aspect-ratio: 1;
+            .row {
+                display: flex;
+                flex-direction: row;
+
+                .tile {
+                    margin: 5px;
+                    min-width: 50px;
+                    min-height: 50px;
+                    outline: 2px solid black;
+                }
+            }
         }
     }
 
     .keyboard-container {
-        color: brown;
         display: flex;
         justify-content: center;
         min-height: 300px;
