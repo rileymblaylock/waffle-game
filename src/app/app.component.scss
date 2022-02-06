@@ -1,0 +1,42 @@
+#app-root {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    min-height: 100%;
+    flex: 1;
+
+    .header-container {
+        color: white;
+        display: flex;
+        justify-content: center;
+        min-height: 100px;
+        flex: 1;
+    }
+
+    .content-container {
+        color: brown;
+        display: flex;
+        justify-content: center;
+        padding: 50px 0 50px 0;
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            grid-gap: 5px;
+        }
+
+        .grid-container div {
+            background-color: red;
+            min-width: 50px;
+            aspect-ratio: 1;
+        }
+    }
+
+    .keyboard-container {
+        color: brown;
+        display: flex;
+        justify-content: center;
+        min-height: 300px;
+        flex: 1;
+    }
+}
