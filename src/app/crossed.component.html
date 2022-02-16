@@ -1,7 +1,7 @@
 <div id="main">
 
     <div class="header-container">
-        <h1>Crossed</h1>
+        <h1>Crosswordle</h1>
     </div>
 
     <div class="board-container">
@@ -11,9 +11,11 @@
 			    [class.partial]="letter.state === LetterState.PARTIAL_MATCH"
 			    [class.wrong]="letter.state === LetterState.WRONG"
                 [class.focus]="(wordIndex === focusedRowIndex && !diagonalFocus) || (letterIndex === wordIndex && diagonalFocus)"
+                [class.subfocus]="currentLetterIndex === letterIndex && focusedRowIndex === wordIndex"
 			    [class.has-text]="letter.text !== ''"
+                [class.blur]="(diagonalFocus && (wordIndex !== letterIndex) && letter.state !== LetterState.PARTIAL_MATCH)"
                 #letter>
-                {{ letter.text }}
+                <span>{{ letter.text }}</span>
             </div>
         </div>
     </div>
@@ -27,7 +29,7 @@
     <div class="keyboard-container">
 		<div [class]="['row' + i, 'row'].join(' ')"
 		    *ngFor="let row of keyboardRows; let i = index">
-			<div *ngFor="let key of row" class="key" [class.enter]="key === 'Enter'" (click)="handleClickKey(key)">
+			<div *ngFor="let key of row" [class]="getKeyClass(key)" [class.enter]="key === 'Enter'" (click)="handleClickKey(key)">
 				<div *ngIf="key !== 'Backspace'; else backspace">
 				  {{key}}
 				</div>
