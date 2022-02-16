@@ -1,0 +1,40 @@
+<div id="main">
+
+    <div class="header-container">
+        <h1>Crossed</h1>
+    </div>
+
+    <div class="board-container">
+        <div class="word-container" *ngFor="let try of tries; let wordIndex = index" #row>
+            <div class="letter-container" *ngFor="let letter of try.letters; let letterIndex = index" (click)="toggleFocus(wordIndex, letterIndex)"
+                [class.match]="letter.state === LetterState.FULL_MATCH"
+			    [class.partial]="letter.state === LetterState.PARTIAL_MATCH"
+			    [class.wrong]="letter.state === LetterState.WRONG"
+                [class.focus]="(wordIndex === focusedRowIndex && !diagonalFocus) || (letterIndex === wordIndex && diagonalFocus)"
+			    [class.has-text]="letter.text !== ''"
+                #letter>
+                {{ letter.text }}
+            </div>
+        </div>
+    </div>
+
+    <div class="hint-container"[class.show]="hintText !== ''" [class.fade-out]="hintText === ''">
+        {{ hintText }}
+    </div>
+
+    <div class="popup-container"></div>
+
+    <div class="keyboard-container">
+		<div [class]="['row' + i, 'row'].join(' ')"
+		    *ngFor="let row of keyboardRows; let i = index">
+			<div *ngFor="let key of row" class="key" [class.enter]="key === 'Enter'" (click)="handleClickKey(key)">
+				<div *ngIf="key !== 'Backspace'; else backspace">
+				  {{key}}
+				</div>
+				<ng-template #backspace>
+					<img src="../assets/backspace.svg"/>
+				</ng-template>
+			</div>
+		</div>
+	</div>
+</div>
