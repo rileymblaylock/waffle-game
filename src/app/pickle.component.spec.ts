@@ -1,20 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PickleComponent } from './pickle.component';
 
-import { CrossedComponent } from './crossed.component';
-
-describe('CrossedComponent', () => {
-  let component: CrossedComponent;
-  let fixture: ComponentFixture<CrossedComponent>;
+describe('PickleComponent', () => {
+  let component: PickleComponent;
+  let fixture: ComponentFixture<PickleComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CrossedComponent ]
+      declarations: [ PickleComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CrossedComponent);
+    fixture = TestBed.createComponent(PickleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

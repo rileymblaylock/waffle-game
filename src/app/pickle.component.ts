@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {Component, ElementRef, HostListener, QueryList, ViewChildren} from '@angular/core';
 
 const WORDS = ['WORDLE', 'PICKLE'];
 
@@ -41,11 +41,11 @@ enum LetterState {
 }
 
 @Component({
-  selector: 'app-crossed',
-  templateUrl: './crossed.component.html',
-  styleUrls: ['./crossed.component.scss'],
+  selector: 'app-pickle-game',
+  templateUrl: './pickle.component.html',
+  styleUrls: ['./pickle.component.scss'],
 })
-export class CrossedComponent {
+export class PickleComponent {
   @ViewChildren('tryContainer') tryContainers!: QueryList<ElementRef>;
 
   // Stores all tries.
