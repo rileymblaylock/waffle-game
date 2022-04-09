@@ -1,9 +1,11 @@
-#container {
+#app-pickle-game {
     display: flex;
     height: 100%;
     width: 100%;
     justify-content: center;
     overflow: hidden;
+    color: var(--text-color);
+    background-color: var(--bkg-color);
 
     .game {
         height: 100%;
@@ -18,10 +20,10 @@
         .title-container {
             width: 100%;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            justify-content: center;
-            border-bottom: 1px solid #ddd;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--color-tone-4);
             padding: 4px 0 4px 0;
 
             .title {
@@ -29,6 +31,19 @@
                 font-weight: 700;
                 font-size: 36px;
                 letter-spacing: 0.2rem;
+            }
+
+            .button-group {
+                display: flex;
+                flex-direction: row;
+
+                .button {
+                    padding: 0 6px 0 6px;
+
+                    &.hidden {
+                        visibility: hidden;
+                    }
+                }
             }
         }
 
@@ -40,14 +55,13 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            padding: 50px;
 
             .row {
                 display: flex;
                 width: 100%;
                 height: 100%;
-                max-width: 420px;
-                max-height: 70px;
+                max-width: 396px;
+                max-height: 62px;
                 margin-bottom: 4px;
 
                 &.shake {
@@ -58,8 +72,8 @@
                 .letter-container {
                     width: 100%;
                     height: 15vw;
-                    max-height: 66px;
-                    border: 2px solid #ddd;
+                    max-height: 62px;
+                    border: 2px solid var(--color-tone-4);
                     box-sizing: border-box;
                     margin: 0 2px;
                     display: flex;
@@ -71,28 +85,28 @@
                     transition: transform 180ms;
 
                     &.has-text {
-                        border-color: #888;
+                        border-color: var(--color-tone-3);
                         animation-name: letter-pop;
                         animation-duration: 120ms;
                     }
 
                     // Got those colors from the wordle game.
                     &.match {
-                        background-color: #6aaa64;
-                        border-color: #6aaa64;
-                        color: white;
+                        background-color: var(--color-green);
+                        border-color: var(--color-green);
+                        color: var(--letter-text);
                     }
 
                     &.partial {
-                        background-color: #c9b458;
-                        border-color: #c9b458;
-                        color: white;
+                        background-color: var(--color-yellow);
+                        border-color: var(--color-yellow);
+                        color: var(--letter-text);
                     }
 
                     &.wrong {
-                        background-color: #86888a;
-                        border-color: #86888a;
-                        color: white;
+                        background-color: var(--color-wrong);
+                        border-color: var(--color-wrong);
+                        color: var(--letter-text);
                     }
 
                     &.fold {
@@ -138,7 +152,7 @@
                 justify-content: center;
                 cursor: pointer;
                 border-radius: 4px;
-                background-color: #d3d6da;
+                background-color: var(--color-tone-2);
                 font-size: 13px;
                 font-weight: bold;
                 user-select: none;
@@ -153,22 +167,18 @@
                 }
 
                 &.match {
-                    background-color: #6aaa64;
+                    background-color: var(--color-green);
                     color: white;
                 }
 
                 &.partial {
-                    background-color: #c9b458;
+                    background-color: var(--color-yellow);
                     color: white;
                 }
 
                 &.wrong {
-                    background-color: #86888a;
+                    background-color: var(--color-wrong);
                     color: white;
-                }
-
-                &:hover {
-                    background-color: #bbb;
                 }
 
                 &.half {
@@ -183,8 +193,8 @@
             position: absolute;
             top: 82px;
             padding: 16px 24px;
-            background-color: black;
-            color: white;
+            background-color: var(--text-color);
+            color: var(--bkg-color);
             border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
@@ -245,17 +255,102 @@
                 }
             }
         }
+
+        .settings-container {
+            background-color: var(--bkg-color);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            max-width: 500px;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            display: flex;
+
+            &.show {
+                visibility: visible;
+            }
+
+            .content-container {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                height: 100%;
+                padding: 0 10px 0 10px;
+
+                .header-container {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    padding: 10px 0 8px 0px;
+
+                    .header {
+                        font-weight: 700;
+                        font-size: 16px;
+                        letter-spacing: 0.5px;
+                        text-align: center;
+                    }
+
+                    .close {       
+                        &.hidden {
+                            visibility: hidden;
+                        }
+                    }
+                }
+
+                .row {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    padding: 16px 0 16px 0px;
+                    border-bottom: 1px solid var(--color-tone-4);
+                    font-size: 18px;
+
+                    .toggle-button-container {
+                        .onoffswitch {
+                            position: relative; width: 40px;
+                            -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+                        }
+                        .onoffswitch-checkbox {
+                            position: absolute;
+                            opacity: 0;
+                            pointer-events: none;
+                        }
+                        .onoffswitch-label {
+                            display: block; overflow: hidden; cursor: pointer;
+                            height: 20px; padding: 0; line-height: 20px;
+                            border: 2px solid #878a8c; border-radius: 20px;
+                            background-color: #878a8c;
+                        }
+                        .onoffswitch-label:before {
+                            content: "";
+                            display: block; width: 20px; margin: 0px;
+                            background: #FFFFFF;
+                            position: absolute; top: 0; bottom: 0;
+                            right: 18px;
+                            border: 2px solid #878a8c; border-radius: 20px;
+                        }
+                        .onoffswitch-checkbox:checked + .onoffswitch-label {
+                            background-color: #6aaa64;
+                        }
+                        .onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+                           border-color: #6aaa64;
+                        }
+                        .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+                            right: 0px; 
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    // Animation for entering a letter.
     @keyframes letter-pop {
         0% { transform: scale(1); }
         50% { transform: scale(1.15); }
         100% { transform: scale(1); }
     }
 
-
-    // Stole from wordle css.
     @keyframes shake {
         10%,
         90% {
@@ -279,7 +374,6 @@
         }
     }
 
-    // Again, got this from wordle css:)
     @keyframes bounce {
         0%, 20% {
             transform: translateY(0);
