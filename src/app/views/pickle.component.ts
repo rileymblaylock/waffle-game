@@ -1,16 +1,13 @@
-import {Component, ElementRef, HostListener, OnInit, QueryList, ViewChildren} from '@angular/core';
-import { wordsList } from '../util/wordsList';
-import { Try, LetterState, NUM_TRIES, Letter, WORD_LENGTH, LETTERS, keyboardRows, loseMessages, winMessages } from '../util/constants';
-
-const WORDS = wordsList;
+import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
+import { Try, LetterState, NUM_TRIES, Letter, WORD_LENGTH, PICKLE_EMOJI, keyboardRows, date } from '../util/constants';
 
 @Component({
-  selector: 'app-pickle-game',
-  templateUrl: './pickle.component.html',
-  styleUrls: ['./pickle.component.scss'],
+    selector: 'app-pickle-game',
+    templateUrl: './pickle.component.html',
+    styleUrls: ['./pickle.component.scss'],
 })
 export class PickleComponent implements OnInit {
-  @ViewChildren('tryContainer') tryContainers!: QueryList<ElementRef>;
+    @ViewChildren('tryContainer') tryContainers!: QueryList<ElementRef>;
 
 	// One try is one row in the UI.
 	readonly tries: Try[] = [];
@@ -27,6 +24,9 @@ export class PickleComponent implements OnInit {
 	showShareDialog = false;
 	showSettings = false;
 	showHelp = false;
+    darkMode = false;
+    showShareButton = false;
+    dayNumber = 0;
 
 	private curLetterIndex = 0;
 	private numSubmittedTries = 0;
@@ -40,7 +40,51 @@ export class PickleComponent implements OnInit {
 	}
 
     ngOnInit(): void {
-        // Populate initial state of "tries".
+
+        this.startTimer();
+
+        this.getCurrentDaysSince();
+
+        const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (userPrefersDark) {
+            this.toggleDarkMode();
+        }
+
+        this.initBoard();
+
+        this.initIfWin();
+    }
+
+    startTimer() {
+        let div=document.getElementById("timer");
+ 
+        setInterval(function(){ 
+            var toDate=new Date();
+            var tomorrow=new Date();
+            tomorrow.setHours(24,0,0,0);
+            var diffMS=tomorrow.getTime()/1000-toDate.getTime()/1000;
+            var diffHr=Math.floor(diffMS/3600);
+            diffMS=diffMS-diffHr*3600;
+            var diffMi=Math.floor(diffMS/60);
+            diffMS=diffMS-diffMi*60;
+            var diffS=Math.floor(diffMS);
+            var result=((diffHr<10)?"0"+diffHr:diffHr);
+            result+=":"+((diffMi<10)?"0"+diffMi:diffMi);
+            result+=":"+((diffS<10)?"0"+diffS:diffS);
+            div.innerHTML = String(result);
+        }, 1000);
+    }
+
+    private getCurrentDaysSince() {
+        let days = 0;
+        let currentDate = new Date();
+        let startDate = new Date(date);
+        days = currentDate.getTime() - startDate.getTime();
+        days = Math.floor(days / (1000 * 3600 * 24));
+        this.dayNumber = days;
+    }
+
+    initBoard() {
 		for (let i = 0; i < NUM_TRIES; i++) {
 			const letters: Letter[] = [];
 			for (let j = 0; j < WORD_LENGTH; j++) {
@@ -49,9 +93,8 @@ export class PickleComponent implements OnInit {
 			this.tries.push({letters});
 		}
 
-		this.targetWord = 'pickle';
+		this.targetWord = '🥒🥒🥒🥒🥒';
 
-		// Generate letter counts for target word.
 		for (const letter of this.targetWord) {
 			const count = this.targetWordLetterCounts[letter];
 			if (count == null) {
@@ -61,23 +104,17 @@ export class PickleComponent implements OnInit {
 		}
     }
 
-	@HostListener('document:keydown', ['$event'])
-	handleKeyboardEvent(event: KeyboardEvent) {
-		this.handleClickKey(event.key);
-	}
-
-	// Returns the classes for the given keyboard key based on its state.
 	getKeyClass(key: string): string {
 		const state = this.curLetterStates[key.toLowerCase()];
 		switch (state) {
-		case LetterState.FULL_MATCH:
-			return 'match key';
-		case LetterState.PARTIAL_MATCH:
-			return 'partial key';
-		case LetterState.WRONG:
-			return 'wrong key';
-		default:
-			return 'key';
+            case LetterState.FULL_MATCH:
+                return 'match key';
+            case LetterState.PARTIAL_MATCH:
+                return 'partial key';
+            case LetterState.WRONG:
+                return 'wrong key';
+            default:
+                return 'key';
 		}
 	}
 
@@ -86,16 +123,12 @@ export class PickleComponent implements OnInit {
 			return;
 		}
 
-		// If key is a letter, update the text in the corresponding letter object.
-		if (LETTERS[key.toLowerCase()]) {
-			// Only allow typing letters in the current try. Don't go over if the
-			// current try has not been submitted.
+		if (key === '🥒') {
 			if (this.curLetterIndex < (this.numSubmittedTries + 1) * WORD_LENGTH) {
 				this.setLetter(key);
 				this.curLetterIndex++;
 			}
 		} else if (key === 'Backspace') {
-			// Don't delete previous try.
 			if (this.curLetterIndex > this.numSubmittedTries * WORD_LENGTH) {
 				this.curLetterIndex--;
 				this.setLetter('');
@@ -106,31 +139,11 @@ export class PickleComponent implements OnInit {
 	}
 
 	handleClickShare() {
-		// 🟩🟨⬜
-		let clipboardContent = '';
-		for (let i = 0; i < this.numSubmittedTries; i++) {
-			for (let j = 0; j < WORD_LENGTH; j++) {
-				const letter = this.tries[i].letters[j];
-				switch (letter.state) {
-				case LetterState.FULL_MATCH:
-					clipboardContent += '🟩';
-					break;
-				case LetterState.PARTIAL_MATCH:
-					clipboardContent += '🟨';
-					break;
-				case LetterState.WRONG:
-					clipboardContent += '⬜';
-					break;
-				default:
-					break;
-				}
-			}
-			clipboardContent += '\n';
-		}
+		let clipboardContent = 'PICKLE #' + this.dayNumber + ' 1/6\n🥒🥒🥒🥒🥒';
 		navigator.clipboard.writeText(clipboardContent);
 		this.showShareDialogContainer = false;
 		this.showShareDialog = false;
-		this.showInfoMessage('Copied results to clipboard');
+		this.showInfoMessage('RESULTS COPIED TO CLIPBOARD');
 	}
 
 	private setLetter(letter: string) {
@@ -143,8 +156,7 @@ export class PickleComponent implements OnInit {
 		// Check if user has typed all the letters.
 		const curTry = this.tries[this.numSubmittedTries];
 		if (curTry.letters.some(letter => letter.text === '')) {
-			this.showInfoMessage('Not enough letters');
-			// Shake the current row.
+			this.showInfoMessage('🥒');
 			const tryContainer = this.tryContainers.get(this.numSubmittedTries)?.nativeElement as HTMLElement;
 			tryContainer.classList.add('shake');
 			setTimeout(() => {
@@ -153,61 +165,28 @@ export class PickleComponent implements OnInit {
 			return;
 		}
 
-		// Check if the current try is a word in the list.
-		const wordFromCurTry = curTry.letters.map(letter => letter.text).join('').toUpperCase();
-		if (!WORDS.includes(wordFromCurTry.toLowerCase())) {
-			this.showInfoMessage('Not in word list');
-			// Shake the current row.
-			const tryContainer = this.tryContainers.get(this.numSubmittedTries)?.nativeElement as HTMLElement;
-			tryContainer.classList.add('shake');
-			setTimeout(() => {
-				tryContainer.classList.remove('shake');
-			}, 500);
-			return;
-		}
-
-		// Check if the current try matches the target word.
-		// Stores the check results.
-		// Clone the counts map. Need to use it in every check with the initial values.
-		const targetWordLetterCounts = {...this.targetWordLetterCounts};
-		const states: LetterState[] = [];
-		for (let i = 0; i < WORD_LENGTH; i++) {
-			const expected = this.targetWord[i];
-			const curLetter = curTry.letters[i];
-			const got = curLetter.text.toLowerCase();
-			let state = LetterState.WRONG;
-			// Need to make sure only performs the check when the letter has not been
-			// checked before.
-			if (expected === got && targetWordLetterCounts[got] > 0) {
-				targetWordLetterCounts[expected]--;
-				state = LetterState.FULL_MATCH;
-			} else if (
-				this.targetWord.includes(got) && targetWordLetterCounts[got] > 0) {
-				targetWordLetterCounts[got]--;
-				state = LetterState.PARTIAL_MATCH;
-			}
-			states.push(state);
-		}
+        // Set states if target word
+        const states: LetterState[] = [];
+        if (curTry.letters.every(letter => letter.text === PICKLE_EMOJI)) {
+            for (let i = 0; i < WORD_LENGTH; i++) {
+                states.push(LetterState.FULL_MATCH);
+            }
+        }
 
 		// Animate
-		// Get the current try.
 		const tryContainer = this.tryContainers.get(this.numSubmittedTries)?.nativeElement as HTMLElement;
 		// Get the letter elements.
 		const letterEles = tryContainer.querySelectorAll('.letter-container');
 		for (let i = 0; i < letterEles.length; i++) {
 			const curLetterEle = letterEles[i];
 			curLetterEle.classList.add('fold');
-			// Wait for the fold animation to finish.
 			await this.wait(180);
-			// Update state. This will also update styles.
 			curTry.letters[i].state = states[i];
-			// Unfold.
 			curLetterEle.classList.remove('fold');
 			await this.wait(180);
 		}
 
-		// Save to keyboard key states.
-		// Do this after the current try has been submitted and the animation above is done.
+		// Save to keyboard key states
 		for (let i = 0; i < WORD_LENGTH; i++) {
 			const curLetter = curTry.letters[i];
 			const got = curLetter.text.toLowerCase();
@@ -222,9 +201,10 @@ export class PickleComponent implements OnInit {
 
 		// Check if all letters in the current try are correct.
 		if (states.every(state => state === LetterState.FULL_MATCH)) {
-			let msg = this.getRandomMessage(winMessages);
+			let msg = '🥒';
 			this.showInfoMessage(msg);
 			this.won = true;
+            this.showShareButton = true;
 			// Bounce animation.
 			for (let i = 0; i < letterEles.length; i++) {
 				const curLetterEle = letterEles[i];
@@ -233,25 +213,16 @@ export class PickleComponent implements OnInit {
 			}
 			await this.wait(1500);
 			this.toggleShare();
+            localStorage.setItem('Win', String(this.dayNumber));
 			return;
-		}
-
-		// Running out of tries. Show correct answer.
-		if (this.numSubmittedTries === NUM_TRIES) {
-			let msg = this.getRandomMessage(loseMessages);
-			this.showInfoMessage(msg);
-			await this.wait(1500);
-			this.toggleShare();
 		}
 	}
 
 	private showInfoMessage(msg: string, hide = true) {
 		this.infoMsg = msg;
 		if (hide) {
-			// Hide after 2s.
 			setTimeout(() => {
 				this.fadeOutInfoMessage = true;
-				// Reset when animation is done.
 				setTimeout(() => {
 					this.infoMsg = '';
 					this.fadeOutInfoMessage = false;
@@ -282,11 +253,32 @@ export class PickleComponent implements OnInit {
 	}
 
 	getRandomMessage(messages): string {
-		return messages[Math.floor(Math.random() * messages.length)];
+		return messages[0];
 	}
 
-	toggleDarkMode(){
+	toggleDarkMode() {
+        this.darkMode = !this.darkMode
 		document.body.classList.toggle('dark-theme');
-		console.log(document.body.classList);
 	}
+
+    // TODO
+    private async initIfWin() {
+        if (Number(localStorage.getItem('Win')) === this.dayNumber) {
+            this.won = true;
+            this.showShareButton = true;
+            for (let i = 0; i < 5; i++) {
+                this.tries[0].letters.pop();
+            }
+            for (let i = 0; i < 5; i++) {
+                this.handleClickKey('🥒');
+                this.tries[0].letters.push({text: '🥒', state: LetterState.FULL_MATCH});
+            }
+            this.curLetterStates['🥒'] = LetterState.FULL_MATCH;
+            setTimeout(() => {
+                this.toggleShare();
+            }, 1000);
+        } else {
+            localStorage.clear();
+        }
+    }
 }

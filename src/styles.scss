@@ -10,6 +10,7 @@ body, html {
 body {
     --text-color: black;
     --bkg-color: white;
+    --bkg-color-transparent: rgba(255, 255, 255, 0.5);
     --color-tone-1: #1a1a1b;
     --color-tone-2: #d3d6da;
     --color-tone-3: #878a8c;
@@ -18,11 +19,14 @@ body {
     --color-yellow: #c9b458;
     --color-wrong: #787c7e;
     --letter-text: #fff;
+    --color-tone-6: #f6f7f8;
+    --color-tone-7: white;
 }
 
 body.dark-theme {
     --text-color: #d7dadc;
     --bkg-color: #121213;
+    --bkg-color-transparent: rgba(0, 0, 0, 0.5);
     --color-tone-1: #d7dadc;
     --color-tone-2: #818384;
     --color-tone-3: #565758;
@@ -31,4 +35,6 @@ body.dark-theme {
     --color-yellow: #b59f3b;
     --color-wrong: #3a3a3c;
     --letter-text: #d7dadc;
+    --color-tone-6: #1a1a1b;
+    --color-tone-7: #121213;
 }
