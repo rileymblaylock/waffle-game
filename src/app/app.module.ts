@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { PickleComponent } from './views/pickle.component';
+import { WaffleComponent } from './views/waffle.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PickleComponent
+    WaffleComponent
   ],
   imports: [
     BrowserModule

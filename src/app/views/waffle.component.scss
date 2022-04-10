@@ -1,4 +1,4 @@
-#app-pickle-game {
+#app-waffle-game {
     display: flex;
     height: 100%;
     width: 100%;
@@ -389,7 +389,7 @@
                     }
                 }
 
-                .pickle-container {
+                .waffle-container {
                     display: flex;
                     flex-direction: column;
                     width: 100%;
@@ -398,7 +398,7 @@
                     text-align: center;
                     font-size: xx-large;
 
-                    .pickle-text{
+                    .waffle-text{
                         a {
                             text-decoration: none;
                         }

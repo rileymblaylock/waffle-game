@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PickleComponent } from './pickle.component';
+import { WaffleComponent } from './waffle.component';
 
-describe('PickleComponent', () => {
-  let component: PickleComponent;
-  let fixture: ComponentFixture<PickleComponent>;
+describe('WaffleComponent', () => {
+  let component: WaffleComponent;
+  let fixture: ComponentFixture<WaffleComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PickleComponent ]
+      declarations: [ WaffleComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PickleComponent);
+    fixture = TestBed.createComponent(WaffleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

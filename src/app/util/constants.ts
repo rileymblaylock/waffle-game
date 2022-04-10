@@ -7,7 +7,9 @@ export const WORD_LENGTH = 5;
 export const NUM_TRIES = 6;
 
 // Letter map.
-export const PICKLE_EMOJI = '🥒';
+export const WAFFLE_EMOJI = '🧇';
+
+export const targetWord = Array.from({ length: 5 }).fill(WAFFLE_EMOJI);
 
 // One try.
 export interface Try {
@@ -28,11 +30,11 @@ export enum LetterState {
 }
 
 export const keyboardRows = [
-    ['🥒', '🥒', '🥒', '🥒', '🥒', '🥒', '🥒', '🥒', '🥒', '🥒'],
-    ['🥒', '🥒', '🥒', '🥒', '🥒', '🥒', '🥒', '🥒', '🥒', ''],
-    ['Enter', '🥒', '🥒', '🥒', '🥒', '🥒', '🥒', '🥒', 'Backspace'],
+    ['🧇', '🧇', '🧇', '🧇', '🧇', '🧇', '🧇', '🧇', '🧇', '🧇'],
+    ['🧇', '🧇', '🧇', '🧇', '🧇', '🧇', '🧇', '🧇', '🧇', ''],
+    ['Enter', '🧇', '🧇', '🧇', '🧇', '🧇', '🧇', '🧇', 'Backspace'],
 ];
 
 export const message = [
-    'PICKLE'
+    'WAFFLE'
 ];

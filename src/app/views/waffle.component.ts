@@ -1,12 +1,12 @@
 import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
-import { Try, LetterState, NUM_TRIES, Letter, WORD_LENGTH, PICKLE_EMOJI, keyboardRows, date } from '../util/constants';
+import { Try, LetterState, NUM_TRIES, Letter, WORD_LENGTH, WAFFLE_EMOJI, keyboardRows, date, targetWord } from '../util/constants';
 
 @Component({
-    selector: 'app-pickle-game',
-    templateUrl: './pickle.component.html',
-    styleUrls: ['./pickle.component.scss'],
+    selector: 'app-waffle-game',
+    templateUrl: './waffle.component.html',
+    styleUrls: ['./waffle.component.scss'],
 })
-export class PickleComponent implements OnInit {
+export class WaffleComponent implements OnInit {
     @ViewChildren('tryContainer') tryContainers!: QueryList<ElementRef>;
 
 	// One try is one row in the UI.
@@ -30,7 +30,6 @@ export class PickleComponent implements OnInit {
 
 	private curLetterIndex = 0;
 	private numSubmittedTries = 0;
-	private targetWord = '';
 	private won = false;
 
 	// Stores the count for each letter from the target word.
@@ -93,14 +92,12 @@ export class PickleComponent implements OnInit {
 			this.tries.push({letters});
 		}
 
-		this.targetWord = '🥒🥒🥒🥒🥒';
-
-		for (const letter of this.targetWord) {
-			const count = this.targetWordLetterCounts[letter];
+		for (const letter of targetWord) {
+			const count = this.targetWordLetterCounts[String(letter)];
 			if (count == null) {
-				this.targetWordLetterCounts[letter] = 0;
+				this.targetWordLetterCounts[String(letter)] = 0;
 			}
-			this.targetWordLetterCounts[letter]++;
+			this.targetWordLetterCounts[String(letter)]++;
 		}
     }
 
@@ -123,7 +120,7 @@ export class PickleComponent implements OnInit {
 			return;
 		}
 
-		if (key === '🥒') {
+		if (key === WAFFLE_EMOJI) {
 			if (this.curLetterIndex < (this.numSubmittedTries + 1) * WORD_LENGTH) {
 				this.setLetter(key);
 				this.curLetterIndex++;
@@ -139,7 +136,7 @@ export class PickleComponent implements OnInit {
 	}
 
 	handleClickShare() {
-		let clipboardContent = 'PICKLE #' + this.dayNumber + ' 1/6\n🥒🥒🥒🥒🥒';
+		let clipboardContent = 'WAFFLE #' + this.dayNumber + ' 1/6\n🧇🧇🧇🧇🧇';
 		navigator.clipboard.writeText(clipboardContent);
 		this.showShareDialogContainer = false;
 		this.showShareDialog = false;
@@ -156,7 +153,7 @@ export class PickleComponent implements OnInit {
 		// Check if user has typed all the letters.
 		const curTry = this.tries[this.numSubmittedTries];
 		if (curTry.letters.some(letter => letter.text === '')) {
-			this.showInfoMessage('🥒');
+			this.showInfoMessage(WAFFLE_EMOJI);
 			const tryContainer = this.tryContainers.get(this.numSubmittedTries)?.nativeElement as HTMLElement;
 			tryContainer.classList.add('shake');
 			setTimeout(() => {
@@ -167,7 +164,7 @@ export class PickleComponent implements OnInit {
 
         // Set states if target word
         const states: LetterState[] = [];
-        if (curTry.letters.every(letter => letter.text === PICKLE_EMOJI)) {
+        if (curTry.letters.every(letter => letter.text === WAFFLE_EMOJI)) {
             for (let i = 0; i < WORD_LENGTH; i++) {
                 states.push(LetterState.FULL_MATCH);
             }
@@ -201,7 +198,7 @@ export class PickleComponent implements OnInit {
 
 		// Check if all letters in the current try are correct.
 		if (states.every(state => state === LetterState.FULL_MATCH)) {
-			let msg = '🥒';
+			let msg = WAFFLE_EMOJI;
 			this.showInfoMessage(msg);
 			this.won = true;
             this.showShareButton = true;
@@ -270,10 +267,10 @@ export class PickleComponent implements OnInit {
                 this.tries[0].letters.pop();
             }
             for (let i = 0; i < 5; i++) {
-                this.handleClickKey('🥒');
-                this.tries[0].letters.push({text: '🥒', state: LetterState.FULL_MATCH});
+                this.handleClickKey(WAFFLE_EMOJI);
+                this.tries[0].letters.push({text: WAFFLE_EMOJI, state: LetterState.FULL_MATCH});
             }
-            this.curLetterStates['🥒'] = LetterState.FULL_MATCH;
+            this.curLetterStates[WAFFLE_EMOJI] = LetterState.FULL_MATCH;
             setTimeout(() => {
                 this.toggleShare();
             }, 1000);
