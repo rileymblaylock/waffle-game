@@ -263,7 +263,7 @@ export class PickleComponent implements OnInit {
 
     // TODO
     private async initIfWin() {
-        if (Number(localStorage.getItem('Win')) === this.dayNumber) {
+        if (Number(String(localStorage.getItem('Win'))) === this.dayNumber) {
             this.won = true;
             this.showShareButton = true;
             for (let i = 0; i < 5; i++) {
